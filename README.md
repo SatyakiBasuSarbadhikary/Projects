@@ -1,94 +1,87 @@
-### 1.)Gender Recognition by Voice and Speech Analysis
+### 1.)Gender Classification by Voice 
 
-This database was created to identify a voice as male or female, based upon acoustic properties of the voice and speech. The dataset consists of 3,168 recorded voice samples, collected from male and female speakers. The voice samples are pre-processed by acoustic analysis in R using the seewave and tuneR packages, with an analyzed frequency range of 0hz-280hz (human vocal range).
-The Dataset
-The following acoustic properties of each voice are measured and included within the CSV:
-meanfreq: mean frequency (in kHz), sd: standard deviation of frequency,median: median frequency (in kHz),Q25: first quantile (in kHz),Q75: third quantile (in kHz),IQR: interquantile range (in kHz),skew: skewness (see note in specprop description),kurt: kurtosis (see note in specprop description),sp.ent: spectral entropy,sfm: spectral flatness,mode: mode frequency,centroid: frequency centroid (see specprop),peakf: peak frequency (frequency with highest energy),meanfun: average of fundamental frequency measured across acoustic signal,minfun: minimum fundamental frequency measured across acoustic signal,maxfun: maximum fundamental frequency measured across acoustic signal,meandom: average of dominant frequency measured across acoustic signal,mindom: minimum of dominant frequency measured across acoustic signal,maxdom: maximum of dominant frequency measured across acoustic signal
-dfrange: range of dominant frequency measured across acoustic signal,modindx: modulation index. Calculated as the accumulated absolute difference between adjacent measurements of fundamental frequencies divided by the frequency range,label: male or female
+https://colab.research.google.com/drive/1CaOyCRVAMFPbt6H3gRUhS92HGE54_Cyj
 
-EDA
+The Voice Gender Classification project aims to analyze and classify gender based on voice samples.
+The dataset used in this project contains 21 acoustic features such as mean frequency, standard
+deviation, median, and other relevant characteristics extracted from 1,00,000 voice recordings of
+male and female voices , from this
+http://www.repository.voxforge1.org/downloads/SpeechCorpus/Trunk/Audio/Main/8kHz_16bit/
+Repository .
+Each voice sample is stored as a .WAV file, which is then pre-processed for acoustic analysis using
+the specan function from the  WarbleR  R package. Specan measures 22 acoustic parameters on
+acoustic signals for which the start and end times are provided.
+The output from the pre-processed WAV files were saved into a CSV file, containing 3168 rows and
+21 columns (20 columns for each feature and one label column for the classification of male or
+female).The dataset on preprocessing and further analysis is shown to have equal count of male and
+female voices .
 
-1: The histogram of  Distribution of Spectral Flatness Histogram shows that the distribution of spectral flatness values varies across the dataset. There appear to be differences between the male and female voice samples in terms of this feature. The separation suggests that spectral flatness might be informative for distinguishing between genders based on voice characteristics.
+Acoustic Properties Measured
+The following acoustic properties of each voice are measured:
+ duration: length of signal
+ meanfreq: mean frequency (in kHz)
+ sd: standard deviation of frequency
+ median: median frequency (in kHz)
+ Q25: first quantile (in kHz)
+ Q75: third quantile (in kHz)
+ IQR: interquantile range (in kHz)
+ skew: skewness (see note in specprop description)
+ kurt: kurtosis (see note in specprop description)
+ sp.ent: spectral entropy
+ sfm: spectral flatness
+ mode: mode frequency
+ centroid: frequency centroid (see specprop)
+ peakf: peak frequency (frequency with highest energy)
+ meanfun: average of fundamental frequency measured across acoustic signal
+ minfun: minimum fundamental frequency measured across acoustic signal
+ maxfun: maximum fundamental frequency measured across acoustic signal
+ meandom: average of dominant frequency measured across acoustic signal
 
-2. The histogram of Distribution of Average Fundamental Frequency Histogram illustrates that  "meanfun” (average fundamental frequency) values have distinct distributions for male and female voice samples. There is a noticeable difference between the two genders, indicating that this feature might be relevant for gender classification.
-
-3. Label Balance Verification Pie Chart shows the distribution of the two gender labels ("Male" and "Female") in the dataset.It indicates that the dataset has a relatively balanced representation of male and female voice samples. This balance is essential for training models without class bias.
-
-4. Label Balance Verification Count Plot depicts the count of male and female voice samples using bars. The count plot further confirms that the dataset has a balanced distribution of male and female samples. This balance enhances the credibility of the dataset for building unbiased machine learning models.
-
-5. Correlation Heatmap visually represents the correlations between different acoustic features.The heatmap helps identify potential correlations between features. Darker colors represent stronger correlations. Features with high positive or negative correlations might be interrelated and could provide useful information for the models.
-
-6. Correlation Coefficient Bar Plot The bar plot displays the correlation coefficients of features with the gender label. This plot highlights the features that have higher correlations with the gender label. Features with larger coefficients might have more predictive power for gender classification.
-
-Ml  MODEL BUILDING
-
-Gaussian Naive Bayes (GNB) Classifier has  Validation Accuracy: Around 86.02%,Logistic Regression (LR) Classifier has  Validation Accuracy: Around 97.31%,*K-Nearest Neighbors (KNN) Classifier has validation Accuracy: Around 94.26%,Support Vector Classifier (SVC) has  Validation Accuracy: around 97.31%, Decision Tree (DT) Classifier has  Validation Accuracy: Around 94.89%,Random Forest (RF) Classifier, has  Validation Accuracy: Around 98.42%,Multi-layer Perceptron (MLP) Classifier has  Validation Accuracy: Around 95.11%
-
-The above machine learning models produced varying levels of accuracy in predicting gender based on acoustic voice features. The Random Forest classifier stood out with the highest accuracy, while other models like Logistic Regression and Support Vector Classifier also demonstrated strong performances. However Gaussian Naïve Bayes Classifier showed least accuracy.These results showcase the models' abilities to learn and generalize from the provided dataset.
-
-
-Better Performance Of Random Forest Classifier
-The Random Forest classifier's superior performance can be attributed to its ensemble nature, which combines multiple decision trees' predictions to mitigate overfitting risks. This averaging reduces variance, aiding generalization to unseen data. Through random sampling and feature selection, the algorithm introduces decorrelation among trees, enhancing overall performance. Moreover, it gauges feature importance by ranking contributions to impurity reduction, aiding feature selection. Handling non-linearity adeptly, it captures intricate feature interactions without demanding explicit engineering. Robust to outliers and noise, it benefits from averaging across trees. Striking a balance between bias and variance, it generalizes well. Adaptability to high-dimensional data without overfitting, driven by the combination of trees and randomization, establishes its reliability for complex datasets.
-
-Reason for poor performance of Gaussian Naïve Bayes Classifier
-The Gaussian Naive Bayes (GNB) classifier's diminished accuracy can be attributed to several inherent assumptions and limitations. GNB relies on the naive assumption of feature independence given the class label, which often doesn't hold true in real-world scenarios where features can correlate. It's sensitive to continuous features following Gaussian distributions, hindering its adaptability to non-conforming data. GNB struggles to grasp complex feature interactions, a significant factor in gender voice recognition. Lacking inherent feature importance measures hampers its ability to leverage informative attributes. Skewed predictions due to imbalanced data are a concern. GNB's simplicity can lead to underfitting in complex datasets, impacting performance. Parameter sensitivity and its basic assumptions limit optimization. Given these constraints, other algorithms like Random Forest, which can address non-linearity and interaction complexities, might better suit gender voice recognition tasks.
+ mindom: minimum of dominant frequency measured across acoustic signal
+ maxdom: maximum of dominant frequency measured across acoustic signal
+ dfrange: range of dominant frequency measured across acoustic signal
+ modindx: modulation index. Calculated as the accumulated absolute difference between
+adjacent measurements of fundamental frequencies divided by the frequency range
+NOTE:modindex and duration was excluded from the data set .
+The primary objective of this project is to build and evaluate machine learning models that can
+accurately predict the gender of an individual based on the provided voice features. The main
+approach employed for this task is logistic regression .
+After data preprocessing and exploring relationship between the features with each other and
+further visualisations Logistic regression is employed as a machine learning model to predict gender
+based on voice features. The dataset is split into training (80%)and testing sets(20%). The logistic
+regression model is trained on the training set, and predictions are made on the test set. Model
+performance is evaluated using a confusion matrix, accuracy calculation, and logistic regression
+summary.
+Threshold Optimization
+Different threshold values are explored to find the optimal logistic regression model. The model with
+the highest accuracy is selected, and the corresponding threshold is identified.
 	
 
 
 
-### 2.)Road Accident Analysis And Severity Prediction
+### 2.)Predicting And Analysing the Severity of Road Traffic Accidents 
+The data I used in this project was collected from the UK government's official statistics on road traffic accidents. The dataset included information about the accidents, the vehicles involved, and the casualties.
 
-The dataset used in this analysis focuses on road casualty statistics, aiming to explore the factors influencing the severity of road accidents. It contains information about various attributes related to road accidents, casualties, vehicles, and contextual factors. The data includes features such as casualty class, age of casualty, gender of casualty, casualty type, vehicle reference, accident year, and more. Additionally, the dataset includes categorical attributes such as home area type, vehicle reference, accident year, and various location-related values. The dataset's purpose is to analyze patterns, correlations, and potential predictive relationships between these attributes and the severity of road accident casualties. The analysis involves data visualization techniques to gain insights and the application of machine learning models to predict casualty severity based on the available features.
+The first step in the data preprocessing was to clean the data. I removed any irrelevant columns and dealt with missing values. For categorical variables, I used label encoding to convert them into numerical values that could be used in my machine learning model. For numerical variables, I used standard scaling to ensure that all features had the same scale.
 
+### Exploratory Data Analysis
+*I performed exploratory data analysis to understand the data better and identify any patterns or trends. I visualized the distribution of the severity of injuries and the correlation between different features. This helped me understand which features might be important in predicting the severity of injuries.*
 
- Age Band and Casualty Type: The "age_band_and_type" variable combines information about the age band of the casualty and the type of casualty. 2. Accident Year: The "accident_year" variable represents the year in which the accident occurred , 3. Vehicle Reference: The "vehicle_reference" variable denotes the reference number of the vehicle involved in the accident. 
-4. Status::The "status" variable indicates the status of the accident. 5.Accident Reference:The "accident_reference" variable represents a reference number for the accident. 6. Casualty IMD Decile:The "casualty_imd_decile" variable denotes the Index of Multiple Deprivation (IMD) decile of the casualty. 7. LSOA of Casualty:The "lsoa_of_casualty" variable provides information about the Lower Layer Super Output Area (LSOA) associated with the casualty. 8. Casualty Reference:The "casualty_reference" variable represents a reference number for the casualty. 9. Age and Sex Interaction::An interaction term "age_sex_interaction" was created by multiplying the age band of the casualty by the sex of the casualty10. Numeric Variables:Numeric variables like "longitude", "latitude", "age_of_casualty", "number_of_vehicles", and "number_of_casualties" were also present. These variables were part of the initial data preprocessing and were included in the machine learning models. Correlation analysis using a heatmap helped us understand the relationships between these numeric variables.
+### Model Building
 
+I divided the dataset into a training set and a test set. I chose a Random Forest Classifier as my model due to its ability to handle both categorical and numerical data, and its robustness to overfitting. I trained the model on the training set.
 
+### Model Evaluation
+I evaluated the model's performance using the test set. I used metrics like accuracy, precision, recall, and F1 score to assess the model's performance. I also performed cross-validation to ensure that my model was not overfitting the data.
 
-Data Visualization
-The data visualization component of the analysis presents a visual exploration of the road accident dataset using a variety of graphical representations. Created using Seaborn in Python, these visualizations play a pivotal role in comprehending data relationships and patterns. They offer insights into potential trends and correlations within the dataset. Notably, box plots were used to showcase casualty severity distribution across age bands and casualty types, and to depict the influence of factors like vehicle references, accident statuses, and IMD decile on casualty severity. Count plots provided a temporal view of accident occurrences over different years and unveiled the frequency of specific vehicle and accident references. Additionally, line plots displayed the average casualty severity over time. Collectively, these visualizations offer a clear and concise means of grasping the dataset's nuances, paving the way for more precise predictions and informed decision-making.
+### Model Optimization
+*To improve the model's performance, I performed hyperparameter tuning using GridSearchCV. I also checked the importance of the features in the model, which gave me insights into which factors were most influential in predicting the severity of injuries.*
 
- Machine Learning Models
-Performance Report of Machine Learning Models for Casualty Severity Prediction
-
-We have used two  machine learning models, namely Random Forest Regressor and Gradient Boosting Regressor, in predicting casualty severity based on a road accident dataset. The models were evaluated using appropriate metrics to assess their accuracy and predictive power.
-
-
-1. Random Forest Regressor:
-
-The Random Forest Regressor was applied to predict casualty severity. It is an ensemble learning method that builds multiple decision trees and aggregates their predictions. The model was trained using 80% of the dataset and evaluated on the remaining 20% (testing set).
-
-The Random Forest Regressor model's performance on the test data is as follows:
-
-Root Mean Squared Error (RMSE): 0.4314
-R-squared (R²) Score: 0.0254
-These values provide insights into how well the Random Forest model is predicting casualty severity based on the given features. The RMSE value of 0.4314 indicates the average deviation of predicted severity values from the actual severity values, and the low R² score of 0.0254 suggests that the model's ability to explain the variance in the target variable (casualty severity) is limited.
-
-2. Gradient Boosting Regressor:
-The hyperparameter tuning results for the Gradient Boosting Regressor model are as follows:
-
-| Learning Rate | Number of Estimators | RMSE     | R²       |
-
-| 0.01              | 100                                       | 0.431906 | 0.023196 |
-| 0.01              | 200                                       | 0.430477 | 0.029646 |
-| 0.01              | 300                                       | 0.429894 | 0.032276 |
-| 0.10              | 100                                       | 0.429427 | 0.034374 |
-| 0.10           | 200                                           | 0.429501 | 0.034041 |
-| 0.10           | 300                                           | 0.429588 | 0.033650 |
-| 0.20           | 100                                           | 0.429627 | 0.033476 |
-| 0.20           | 200                                           | 0.429685 | 0.033216 |
-| 0.20           | 300                                           | 0.429689 | 0.033198 |
+### Conclusion
+This project demonstrated how machine learning can be used to predict the severity of road traffic accidents. The model I built can be used by traffic authorities and policymakers to understand the factors that contribute to the severity of accidents and develop strategies to reduce their impact. Future work could involve incorporating more data, such as weather conditions and road conditions, to improve the model's accuracy.
 
 
-The table provides the results of evaluating the Gradient Boosting Regressor model with different combinations of learning rates and the number of estimators. The RMSE values indicate the root mean squared error between the predicted casualty severity values and the actual values, while the R² values represent the coefficient of determination indicating how well the model's predictions match the actual data. Among these combinations, combination 0 (Learning Rate: 0.01, Number of Estimators: 300) seems to have the lowest RMSE (0.429894) and the highest R² (0.032276), making it a potentially better choice among the combinations tested.
 
-
-Why Gradient Boosting performed better than Random Forest?
-Gradient Boosting performed better than Random Forest in predicting casualty severity due to its sequential learning approach and ability to capture complex relationships in the data. It focuses on minimizing errors and assigning higher importance to predictive features, resulting in improved accuracy. Although Random Forest is robust and handles outliers effectively, Gradient Boosting's strengths in handling intricate patterns, feature importance prioritization, and regularization likely contributed to its superior performance. Careful parameter tuning is essential for Gradient Boosting, while Random Forest is simpler to use. The selection between the two depends on dataset characteristics and analysis objectives.
-
-
-Conclusion: In conclusion, the comprehensive analysis of the variables in the road accident dataset provided valuable insights into the factors influencing casualty severity. The combination of data visualization and machine learning techniques contributed to a deeper understanding of the dataset and paved the way for accurate predictions and informed decision-making in road safety.
 
 
 
